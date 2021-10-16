@@ -1,4 +1,5 @@
 ---
+# tasks file for mysql
 - name: Install Mariadb Server - RedHat
   yum: 
     name: 
@@ -15,7 +16,7 @@
       - python-pymysql
     state: present
   when: (ansible_facts['os_family'] == "Debian")
-  
+
 - name: "Start MariaDb"
   service: 
     name: mariadb 

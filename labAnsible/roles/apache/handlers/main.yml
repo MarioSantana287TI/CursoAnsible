@@ -1,9 +1,18 @@
 ---
 # handlers file for apache
-- name: 'enableHttpd'
+- name: 'enableApache2'
   service:
-    name: httpd
+    name: apache2
     enabled: yes
+
+- name: 'addInHostsFile'
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ item }}"
+    create: yes
+  loop:
+    - "{{inventory_hostname}} {{ site_url }}"
+    - "{{inventory_hostname}} {{ site_domain }}"
 
 - name: 'addInHttpdFile'
   lineinfile:
@@ -15,29 +24,6 @@
   service:
     name: httpd
     state: restarted
-
-- name: 'enableApache2'
-  service:
-    name: apache2
-    enabled: yes
-
-- name: 'enableSite'
-  command: a2ensite {{ log_prefix }}.conf
-
-- name: 'reloadApache2'
-  service:
-    name: apache2
-    state: reloaded
-    enabled: yes
-
-- name: 'addInHostsFile'
-  lineinfile:
-    path: /etc/hosts
-    line: "{{ item }}"
-    create: yes
-  loop:
-    - "{{inventory_hostname}} {{ site_url }}"
-    - "{{inventory_hostname}} {{ site_domain }}"
 
 - name: InstallWordPress
   unarchive:
@@ -62,3 +48,17 @@
     group: www-data
     recurse: yes
   when: (ansible_facts['os_family'] == "Debian")
+
+- name: 'enableSite'
+  command: a2ensite {{ log_prefix }}.conf
+
+- name: 'reloadApache2'
+  service:
+    name: apache2
+    state: reloaded
+    enabled: yes
+
+- name: 'enableHttpd'
+  service:
+    name: httpd
+    enabled: yes

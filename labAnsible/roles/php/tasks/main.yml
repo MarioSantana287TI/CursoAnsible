@@ -1,6 +1,5 @@
 ---
 # tasks file for php
-
 - name: "Instala o PHP do Debian"
   apt:
     update_cache: yes
@@ -18,12 +17,6 @@
       - php7.3-exif
     state: latest
   when: (ansible_facts['os_family'] == "Debian")
-
-- name: Enable EPEL Repository on CentOS 8
-  dnf:
-    name: epel-release
-    state: latest
-  when: ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '8'
 
 - name: Enable EPEL Repository on CentOS 7
   yum:
@@ -43,17 +36,10 @@
     state: present
   when: ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '7'
 
-# - name: enable yum-utils
-#   shell:
-#     cmd: "yum-config-manager --enable remi-php74"
-#   when: ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '7'
-
-
-
-
-# - name: enable remi-php71
-#   shell: yum-config-manager --disable remi-php54 | yum-config-manager --enable remi-php73
-#   when: (ansible_facts['os_family'] == "RedHat")
+- name: enable yum-utils
+  shell:
+    cmd: "yum-config-manager --enable remi-php74"
+  when: ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] == '7'
 
 - name: "Instala o PHP do RedHat"
   yum:
@@ -64,3 +50,5 @@
       - php-cli
     state: present
   when: (ansible_facts['os_family'] == "RedHat")
+  notify:
+    - ReiniciaHttpd

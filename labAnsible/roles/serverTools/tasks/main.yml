@@ -7,6 +7,7 @@
     - addInHostsFile
 
 - name: 'Role: serverTools Softwares Uteis para administração do servidor - Debian'
+  tags: setup
   apt:
     update_cache: yes #atualizando o package list
     cache_valid_time: 3600 #1 hora
@@ -21,6 +22,9 @@
   when: (ansible_facts['os_family'] == "Debian")
 
 - name: "Role: serverTools Softwares Uteis para administração do servidor - CentOS"
+  tags: 
+    - setup
+    - so
   yum:
     update_cache: yes
     name:

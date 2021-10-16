@@ -14,7 +14,7 @@
     path: "/etc/httpd/vhost.d"
     state: directory
   when: (ansible_facts['os_family'] == "RedHat")
-  
+
 - name: "Cria virtual host com as configurações do site - RedHat" 
   template:
     src: templates/site.conf
