@@ -1,0 +1,25 @@
+---
+# tasks file for wordpress
+- name: Download WordPress
+  unarchive:
+    src: https://wordpress.org/latest.tar.gz
+    dest: "{{ site_folder }}"
+    remote_src: yes
+
+- name: Ajuste permissão Pasta CentOS
+  file: 
+    path: "{{ site_folder }}/wordpress"
+    state: directory
+    owner: apache
+    group: apache
+    recurse: yes
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: Ajuste permissão Pasta Debian
+  file: 
+    path: "{{ site_folder }}/wordpress"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+  when: (ansible_facts['os_family'] == "Debian")

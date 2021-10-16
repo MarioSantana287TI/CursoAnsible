@@ -1,0 +1,50 @@
+---
+# tasks file for serverTools
+- name: Set a hostname
+  hostname:
+    name: "{{ hostname }}"
+  notify:
+    - addInHostsFile
+
+- name: 'Role: serverTools Softwares Uteis para administração do servidor - Debian'
+  apt:
+    update_cache: yes #atualizando o package list
+    cache_valid_time: 3600 #1 hora
+    name:
+      - vim
+      - iftop
+      - zip
+      - wget
+      - curl
+      - python3
+    state: latest
+  when: (ansible_facts['os_family'] == "Debian")
+
+- name: "Role: serverTools Softwares Uteis para administração do servidor - CentOS"
+  yum:
+    update_cache: yes
+    name:
+      - vim
+      - zip
+      - wget
+      - curl
+      - python3
+      - yum-utils
+    state: latest
+  when: (ansible_facts['os_family'] == "RedHat")
+  notify:
+  - enable yum-utils
+
+- name: "Permite trafego http no firewalld do CentOS"
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: "Disable SELinux em sistemas derivados do RedHat"
+  selinux:
+    state: disabled
+  when: (ansible_facts['os_family'] == "RedHat")
+  notify:
+  - Restart Server

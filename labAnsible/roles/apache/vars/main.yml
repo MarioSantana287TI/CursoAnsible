@@ -1,0 +1,7 @@
+---
+# vars file for apache
+site_folder: "/var/www/mario_local"
+site_url: "www.mario.local"
+site_domain: "mario.local"
+log_prefix: "mario-local"
+php_version: "7.3"

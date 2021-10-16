@@ -1,0 +1,7 @@
+[centos]
+#192.168.211.144 hostname=srv-centos-01
+192.168.211.156 hostname=srv-centos-01
+[debian]
+#192.168.211.151 hostname=srv-debian-01
+192.168.211.159 hostname=srv-debian-01
+

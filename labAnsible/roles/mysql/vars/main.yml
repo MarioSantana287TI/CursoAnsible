@@ -1,0 +1,6 @@
+---
+# vars file for mysql
+mysql_root_password: Password123
+db_wp_name: mario_db
+db_wp_username: user_db
+db_wp_password: 123456

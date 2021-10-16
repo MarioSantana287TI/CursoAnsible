@@ -1,0 +1,64 @@
+---
+# handlers file for apache
+- name: 'enableHttpd'
+  service:
+    name: httpd
+    enabled: yes
+
+- name: 'addInHttpdFile'
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    line: "Include vhost.d/*.conf"
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: 'RestartHttpd'
+  service:
+    name: httpd
+    state: restarted
+
+- name: 'enableApache2'
+  service:
+    name: apache2
+    enabled: yes
+
+- name: 'enableSite'
+  command: a2ensite {{ log_prefix }}.conf
+
+- name: 'reloadApache2'
+  service:
+    name: apache2
+    state: reloaded
+    enabled: yes
+
+- name: 'addInHostsFile'
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ item }}"
+    create: yes
+  loop:
+    - "{{inventory_hostname}} {{ site_url }}"
+    - "{{inventory_hostname}} {{ site_domain }}"
+
+- name: InstallWordPress
+  unarchive:
+    src: https://wordpress.org/latest.tar.gz
+    dest: "{{ site_folder }}"
+    remote_src: yes
+
+- name: SetPermissionWP-CentOS
+  file: 
+    path: "{{ site_folder }}/wordpress"
+    state: directory
+    owner: apache
+    group: apache
+    recurse: yes
+  when: (ansible_facts['os_family'] == "RedHat")
+
+- name: SetPermissionWP-Debian
+  file: 
+    path: "{{ site_folder }}/wordpress"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+  when: (ansible_facts['os_family'] == "Debian")
